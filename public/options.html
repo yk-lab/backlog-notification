@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>設定</title>
-    <link rel="stylesheet" href="popup.css" />
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>設定</title>
+        <link rel="stylesheet" href="popup.css" />
 </head>
 
 <body>
     <div class="app">
         <h1>設定</h1>
-        <div>
+        <!-- <div>
             <label for="DOMAIN">DOMAIN</label>
             <input id="DOMAIN" type="text" />
         </div>
@@ -18,7 +19,14 @@
             <input id="API_KEY" type="text" />
         </div>
         <button id="SAVE">保存</button>
+
+        <hr class="divider" /> -->
+
+        <button id='submit'>Submit</button>
+        <span id='valid_indicator'></span>
+        <div id="editor_holder" data-theme="html"></div>
     </div>
     <script src="options.js"></script>
 </body>
+
 </html>

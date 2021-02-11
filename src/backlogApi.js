@@ -1,13 +1,18 @@
 'use strict';
 
 const getMyIssues = function (cb) {
-    chrome.storage.sync.get(['domain', 'apiKey', 'userId'], items => {
-        if (!items.domain || !items.apiKey || !items.userId) {
+    chrome.storage.sync.get({ projects: [] }, items => {
+        const projects = items.projects;
+        if (projects.length === 0) {
             alert('オプション画面で設定してください');
             return;
         }
-        const url = `https://${items.domain}/api/v2/issues?apiKey=${items.apiKey}&assigneeId[]=${items.userId}&sort=updated`;
-        fetch(url, {method: "GET", mode: "no-cors"}).then(response => response.json()).then(response => cb(response));
+        Promise.all(
+            projects.map((item) => {
+                const url = `https://${item.domain}/api/v2/issues?apiKey=${item.apiKey}&assigneeId[]=${item.userId}&sort=updated`;
+                return fetch(url, { method: "GET", mode: "no-cors" }).then(response => response.json());
+            })
+        ).then(response => cb(projects, response));
     });
 };
 
