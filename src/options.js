@@ -1,56 +1,32 @@
 'use strict';
 
+import './options.css';
+
+import { spacesStrage } from "./storage";
 import { JSONEditor } from "./jsoneditor";
-
-// https://developer.chrome.com/docs/extensions/mv2/options/
-// function save_options() {
-//     const domain = document.getElementById('DOMAIN').value;
-//     const apiKey = document.getElementById('API_KEY').value;
-//     const url = `https://${domain}/api/v2/users/myself?apiKey=${apiKey}`;
-//     fetch(
-//         url,
-//         {
-//             method: "GET",
-//             mode: "no-cors",
-//         }).then(
-//             response => response.json()
-//         ).then(
-//             response => {
-//                 chrome.storage.sync.set({
-//                     apiKey: apiKey,
-//                     domain: domain,
-//                     userId: response.id,
-//                 }, function () {
-//                     alert('保存しました');
-//                 });
-//             }
-//         );
-// }
-
-// function restore_options() {
-//     chrome.storage.sync.get({
-//         apiKey: '',
-//         domain: '',
-//     }, function (items) {
-//         document.getElementById('DOMAIN').value = items.domain;
-//         document.getElementById('API_KEY').value = items.apiKey;
-//     });
-// }
 
 // document.addEventListener('DOMContentLoaded', restore_options);
 // document.getElementById('SAVE').addEventListener('click', save_options);
 
-const json_schema_projects = {
+const json_schema_spaces = {
     type: "array",
-    title: "Backlog Projects",
+    title: "Backlog Spaces",
     // format: "tabs",
+    // format: "table",
+    // format: "tabs-top",
     items: {
-        title: "Project",
+        title: "Space",
         headerTemplate: "{{i}} - {{self.domain}}",
         properties: {
             domain: {
                 type: "string",
-                default: "project-name.backlog.jp",
+                title: "Backlog Workspace Domain",
+                // description: "",
+                options: {
+                    inputAttributes: {
+                        placeholder: "ex.) project-name.backlog.jp",
+                    }
+                }
             },
             apiKey: {
                 type: "string",
@@ -59,28 +35,28 @@ const json_schema_projects = {
             userId: {
                 type: "integer",
                 format: "hidden",
+                options: {
+                    hidden: true
+                },
             }
         },
-    }
+    },
 };
 
 window.onload = function () {
-    chrome.storage.sync.get({ projects: [] }, function (items) {
+    spacesStrage.get(function (spaces) {
         const editor = new JSONEditor(document.getElementById('editor_holder'), {
-            // Enable fetching schemas via ajax
-            // ajax: true,
-
-            // The schema for the editor
-            schema: json_schema_projects,
-
-            // Seed the form with a starting value
-            startval: items.projects,
-
-            // Disable additional properties
-            // no_additional_properties: true,
+            schema: json_schema_spaces,
+            startval: spaces,
 
             // Require all properties by default
-            required_by_default: true
+            required_by_default: true,
+
+            disable_collapse: true,
+            disable_edit_json: true,
+            no_additional_properties: true,
+            disable_properties: true,
+            enable_array_copy: true,
         });
 
         // Hook up the submit button to log to the console
@@ -113,14 +89,8 @@ window.onload = function () {
                 );
 
                 results.then((s) => {
-                    chrome.storage.sync.set({
-                        projects: s,
-                    }, function () {
-                        console.log(s);
+                    spacesStrage.set(s, function () {
                         alert('保存しました');
-                        // chrome.storage.sync.get({ projects: [] }, function (items) {
-                        //     console.log(items);
-                        // });
                     });
                 });
             })();

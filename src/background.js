@@ -5,17 +5,62 @@
 // For more information on background script,
 // See https://developer.chrome.com/extensions/background_pages
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    const message = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
+const { latestAssignedMeStrage } = require('./storage.js');
+const { getMyIssues } = require('./backlogApi.js');
+const { sha256 } = require('./utils.js');
 
-    // Log message coming from the `request` parameter
-    console.log(request.payload.message);
-    // Send a response message
-    sendResponse({
-      message,
+(function () {
+  const urls = {};
+  chrome.alarms.onAlarm.addListener(function (alarm) {
+    if (alarm.name == "BacklogNotificationAlarms_notifyAssignedMeIssues") {
+      getMyIssues((requests, responses) => {
+        latestAssignedMeStrage.get(latestAssignedMe => {
+          console.log(latestAssignedMe);
+          responses.map((response, i) => {
+            const request = requests[i];
+            sha256(`${request.domain}/${request.apiKey}`).then(digest => {
+              let latestUpdated = 0;
+              response.forEach(function (item) {
+                const updated = Date.parse(item.updated);
+                latestUpdated = Math.max(latestUpdated, updated);
+                const url = `https://${request.domain}/view/${item.issueKey}`;
+                if (digest in latestAssignedMe && latestAssignedMe[digest] < updated) {
+                  chrome.notifications.create(
+                    {
+                      iconUrl: "./icons/icon_128.png",
+                      type: "basic",
+                      title: `${item.issueKey}: ${item.summary}`,
+                      message: `${item.updatedUser.name} さんが更新しました`,
+                      requireInteraction: true,
+                    },
+                    notificationId => {
+                      urls[notificationId] = url;
+                    }
+                  );
+                }
+              });
+              latestAssignedMe[digest] = latestUpdated;
+            });
+          });
+          latestAssignedMeStrage.set(latestAssignedMe);
+        });
+      });
+    }
+  });
+
+  chrome.notifications.onClicked.addListener(notificationId => {
+    chrome.tabs.create({ active: true, url: urls[notificationId] });
+    chrome.notifications.clear(notificationId, notificationId => {
+      delete urls[notificationId];
     });
-  }
-});
+  });
+
+  chrome.notifications.onClosed.addListener(notificationId => {
+    delete urls[notificationId];
+  });
+
+  // 30分毎実行
+  // TODO: 設定で実行間隔変更出来るようにする
+  chrome.alarms.create("BacklogNotificationAlarms_notifyAssignedMeIssues", { "periodInMinutes": 30 });
+
+})();

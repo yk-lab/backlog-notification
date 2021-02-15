@@ -6,8 +6,11 @@ const { getMyIssues } = require('./backlogApi.js');
 
 (function () {
   function init() {
+    load();
+  }
+
+  function load() {
     getMyIssues((requests, responses) => {
-      console.log(requests, responses);
       const issueList = document.getElementById('issueList');
       issueList.innerHTML = '';
 
@@ -18,13 +21,25 @@ const { getMyIssues } = require('./backlogApi.js');
 
           const clone = template.content.cloneNode(true);
 
-          clone.querySelector('.status').textContent = item.status.name;
-          clone.querySelector('.issue-type').textContent = item.issueType.name;
+          clone.querySelector('.space-domain').textContent = request.domain.split('.')[0];
           clone.querySelector('.issue-key').textContent = item.issueKey;
           clone.querySelector('.summary').textContent = item.summary;
-          clone.querySelector('.updated').textContent = item.updated;
           clone.querySelector('.updated-user').textContent = item.updatedUser.name;
 
+          // TODO: 設定画面からタイムゾーンと言語を選択可能にする
+          clone.querySelector('.updated').textContent = new Date(Date.parse(item.updated)).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+
+          // status
+          clone.querySelector('.status').style.backgroundColor = item.status.color;
+          clone.querySelector('.status span').textContent = item.status.name;
+          clone.querySelector('.status span').style.color = item.status.color;
+
+          // issue-type
+          clone.querySelector('.issue-type').style.backgroundColor = item.issueType.color;
+          clone.querySelector('.issue-type span').textContent = item.issueType.name;
+          clone.querySelector('.issue-type span').style.color = item.issueType.color;
+
+          // link
           const el_item = clone.querySelector('.item');
           el_item.dataset.issueUrl = `https://${request.domain}/view/${item.issueKey}`;
           el_item.addEventListener('click', function (e) {

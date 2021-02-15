@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <title>担当一覧</title>
-    <link rel="stylesheet" href="popup.css" />
+  <meta charset="UTF-8">
+  <title>担当一覧</title>
+  <link rel="stylesheet" href="popup.css" />
 </head>
+
 <body>
   <div class="app">
     <p class="title">担当一覧</p>
@@ -14,18 +16,24 @@
 
   <template id="listItem">
     <div class="item">
-      <div>
-        <span class="issue-type"></span>
-        <span class="subtitle issue-key"></span>
+      <div class="header">
+        <div class="issue-type">
+          <span></span>
+        </div>
+        <div class="issue-key"></div>
+        <div class="space-domain"></div>
       </div>
       <div class="summary"></div>
-      <div>
-        <span class="status"></span>
-        <span class="updated"></span>
-        <span class="updated-user"></span>
+      <div class="footer">
+        <div class="status">
+          <span></span>
+        </div>
+        <div class="updated"></div>
+        <div class="updated-user"></div>
       </div>
     </div>
   </template>
   <script src="popup.js"></script>
 </body>
+
 </html>

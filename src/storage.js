@@ -1,15 +1,15 @@
 'use strict';
 
-const counterStorage = {
+const spacesStrage = {
     get: cb => {
-        chrome.storage.sync.get(['count'], result => {
-            cb(result.count);
+        chrome.storage.sync.get({ spaces: [] }, result => {
+            cb(result.spaces);
         });
     },
     set: (value, cb) => {
         chrome.storage.sync.set(
             {
-                count: value,
+                spaces: value,
             },
             () => {
                 cb();
@@ -18,18 +18,16 @@ const counterStorage = {
     },
 };
 
-// API KEY
-// TODO: 複数持てるようにする
-const apiKeyStorage = {
+const latestAssignedMeStrage = {
     get: cb => {
-        chrome.storage.sync.get(['apiKey'], result => {
-            cb(result.apiKey);
+        chrome.storage.sync.get({ latestAssignedMe: {} }, result => {
+            cb(result.latestAssignedMe);
         });
     },
     set: (value, cb) => {
         chrome.storage.sync.set(
             {
-                apiKey: value,
+                latestAssignedMe: value,
             },
             () => {
                 cb();
@@ -39,6 +37,6 @@ const apiKeyStorage = {
 };
 
 module.exports = {
-    counterStorage: counterStorage,
-    apiKeyStorage: apiKeyStorage,
+    spacesStrage: spacesStrage,
+    latestAssignedMeStrage: latestAssignedMeStrage,
 };
