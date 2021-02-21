@@ -90,7 +90,7 @@ window.onload = function () {
 
                 results.then((s) => {
                     spacesStrage.set(s, function () {
-                        alert('保存しました');
+                        window.alert('保存しました');
                     });
                 });
             })();

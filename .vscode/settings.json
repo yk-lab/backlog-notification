@@ -1,0 +1,11 @@
+{
+    "jshint.lintHTML": true,
+    "jshint.options": {
+        "esversion": 9,
+        "node" : true,
+        "browser": true,
+        "globals": {
+            "chrome": true
+        }
+    }
+}

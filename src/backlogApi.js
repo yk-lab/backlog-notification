@@ -11,7 +11,7 @@ const getMyIssues = function (cb) {
     chrome.storage.sync.get({ spaces: [] }, items => {
         const spaces = items.spaces;
         if (spaces.length === 0) {
-            alert('オプション画面で設定してください');
+            window.alert('オプション画面で設定してください');
             return;
         }
         Promise
