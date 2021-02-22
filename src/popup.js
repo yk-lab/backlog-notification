@@ -2,7 +2,7 @@
 
 import './popup.css';
 
-const { getMyIssues } = require('./backlogApi.js');
+import { getMyIssues } from './backlogApi';
 
 (function () {
   function init() {

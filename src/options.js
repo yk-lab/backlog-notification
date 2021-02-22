@@ -2,8 +2,8 @@
 
 import './options.css';
 
+import { JSONEditor } from "@json-editor/json-editor";
 import { spacesStrage } from "./storage";
-import { JSONEditor } from "./jsoneditor";
 
 // document.addEventListener('DOMContentLoaded', restore_options);
 // document.getElementById('SAVE').addEventListener('click', save_options);

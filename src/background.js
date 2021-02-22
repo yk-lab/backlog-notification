@@ -5,9 +5,9 @@
 // For more information on background script,
 // See https://developer.chrome.com/extensions/background_pages
 
-const { latestAssignedMeStrage } = require('./storage.js');
-const { getMyIssues } = require('./backlogApi.js');
-const { sha256 } = require('./utils.js');
+import { latestAssignedMeStrage } from './storage';
+import { getMyIssues } from './backlogApi';
+import { sha256 } from './utils';
 
 (function () {
   const urls = {};
