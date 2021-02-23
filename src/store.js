@@ -1,6 +1,6 @@
 'use strict';
 
-export const spacesStrage = {
+export const spacesStore = {
     get: cb => {
         chrome.storage.sync.get({ spaces: [] }, result => {
             cb(result.spaces);
@@ -18,7 +18,7 @@ export const spacesStrage = {
     },
 };
 
-export const latestAssignedMeStrage = {
+export const latestAssignedMeStore = {
     get: cb => {
         chrome.storage.sync.get({ latestAssignedMe: {} }, result => {
             cb(result.latestAssignedMe);

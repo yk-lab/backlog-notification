@@ -3,7 +3,7 @@
 import './options.css';
 
 import { JSONEditor } from "@json-editor/json-editor";
-import { spacesStrage } from "./storage";
+import { spacesStore } from "./store";
 
 // document.addEventListener('DOMContentLoaded', restore_options);
 // document.getElementById('SAVE').addEventListener('click', save_options);
@@ -44,7 +44,7 @@ const json_schema_spaces = {
 };
 
 window.onload = function () {
-    spacesStrage.get(function (spaces) {
+    spacesStore.get(function (spaces) {
         const editor = new JSONEditor(document.getElementById('editor_holder'), {
             schema: json_schema_spaces,
             startval: spaces,
@@ -89,7 +89,7 @@ window.onload = function () {
                 );
 
                 results.then((s) => {
-                    spacesStrage.set(s, function () {
+                    spacesStore.set(s, function () {
                         window.alert('保存しました');
                     });
                 });

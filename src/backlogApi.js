@@ -1,13 +1,13 @@
 'use strict';
 
-import { spacesStrage } from "./storage";
+import { spacesStore } from "./store";
 
 const getMyIssuesUrl = function (domain, apiKey, userId) {
     return `https://${domain}/api/v2/issues?apiKey=${apiKey}&assigneeId[]=${userId}&sort=updated`;
 };
 
 export function getMyIssues(cb) {
-    spacesStrage.get(function (spaces) {
+    spacesStore.get(function (spaces) {
         if (spaces.length === 0) {
             window.alert('オプション画面で設定してください');
             return;

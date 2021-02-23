@@ -5,7 +5,7 @@
 // For more information on background script,
 // See https://developer.chrome.com/extensions/background_pages
 
-import { latestAssignedMeStrage } from './storage';
+import { latestAssignedMeStore } from './store';
 import { getMyIssues } from './backlogApi';
 import { sha256 } from './utils';
 
@@ -14,7 +14,7 @@ import { sha256 } from './utils';
   chrome.alarms.onAlarm.addListener(function (alarm) {
     if (alarm.name == "BacklogNotificationAlarms_notifyAssignedMeIssues") {
       getMyIssues((requests, responses) => {
-        latestAssignedMeStrage.get(latestAssignedMe => {
+        latestAssignedMeStore.get(latestAssignedMe => {
           console.log(latestAssignedMe);
           responses.map((response, i) => {
             const request = requests[i];
@@ -42,7 +42,7 @@ import { sha256 } from './utils';
               latestAssignedMe[digest] = latestUpdated;
             });
           });
-          latestAssignedMeStrage.set(latestAssignedMe);
+          latestAssignedMeStore.set(latestAssignedMe);
         });
       });
     }
