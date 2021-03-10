@@ -23,7 +23,7 @@ jobs:
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: chrome_extension.zip
+        name: chrome_extension
         path: build
         retention-days: 3
     - name: Create release
@@ -39,7 +39,7 @@ jobs:
     - name: Download the artifact
       uses: actions/download-artifact@v1
       with:
-        name: chrome_extension.zip
+        name: chrome_extension
         path: ./
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
