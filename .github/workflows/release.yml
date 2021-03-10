@@ -20,6 +20,12 @@ jobs:
       run: |
         npm ci
         npm run build --if-present
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: chrome_extension.zip
+        path: build
+        retention-days: 3
     - name: Create release
       id: create_release
       uses: actions/create-release@v1.0.0
@@ -30,10 +36,15 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
+    - name: Download the artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: chrome_extension.zip
+        path: ./
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: build
-        asset_name: artifact_${{ github.ref }}.zip
+        asset_name: chrome_extension.zip
         asset_content_type: application/zip
