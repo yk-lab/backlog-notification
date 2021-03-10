@@ -11,19 +11,35 @@ import { optionsStore } from './store';
   }
 
   function load() {
-    getMyIssues((requests, responses) => {
+    getMyIssues().then(result => {
+      const spaces = result.spaces, responses = result.responses;
       optionsStore.get().then(options => {
         const issueList = document.getElementById('issueList');
         issueList.innerHTML = '';
 
-        responses.map((response, i) => {
-          const request = requests[i];
-          response.map(item => {
+        const items = responses
+          .map(
+            (response, i) => {
+              const space = spaces[i];
+              return response
+                .map(item => ({ item, space }));
+            })
+          .reduce((items, item) => [...items, ...item], []);
+
+        items
+          .sort(function (a, b) {
+            if (a.item.updated > b.item.updated) return -1;
+            if (a.item.updated < b.item.updated) return 1;
+            return 0;
+          })
+          .map(result => {
+            const space = result.space, item = result.item;
+
             const template = document.getElementById('listItem');
 
             const clone = template.content.cloneNode(true);
 
-            clone.querySelector('.space-domain').textContent = request.domain.split('.')[0];
+            clone.querySelector('.space-domain').textContent = space.domain.split('.')[0];
             clone.querySelector('.issue-key').textContent = item.issueKey;
             clone.querySelector('.summary').textContent = item.summary;
             clone.querySelector('.updated-user').textContent = item.updatedUser.name;
@@ -43,7 +59,7 @@ import { optionsStore } from './store';
 
             // link
             const el_item = clone.querySelector('.item');
-            el_item.dataset.issueUrl = `https://${request.domain}/view/${item.issueKey}`;
+            el_item.dataset.issueUrl = `https://${space.domain}/view/${item.issueKey}`;
             el_item.addEventListener('click', function (e) {
               const url = this.dataset.issueUrl;
               chrome.tabs.create({ active: true, url: url });
@@ -51,7 +67,6 @@ import { optionsStore } from './store';
 
             issueList.appendChild(clone);
           });
-        });
       });
     });
   }

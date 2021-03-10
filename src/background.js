@@ -13,7 +13,8 @@ import { sha256 } from './utils';
   const urls = {};
   chrome.alarms.onAlarm.addListener(function (alarm) {
     if (alarm.name == "BacklogNotificationAlarms_notifyAssignedMeIssues") {
-      getMyIssues((requests, responses) => {
+      getMyIssues().then(result => {
+        const requests = result.spaces, responses = result.responses;
         latestAssignedMeStore.get(latestAssignedMe => {
           console.log(latestAssignedMe);
           responses.map((response, i) => {
