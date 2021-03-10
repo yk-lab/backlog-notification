@@ -23,7 +23,7 @@ jobs:
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: chrome_extension
+        name: chrome_extension.zip
         path: build
         retention-days: 3
     - name: Create release
@@ -36,11 +36,13 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
+    - run: ls -al
     - name: Download the artifact
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v2
       with:
-        name: chrome_extension
+        name: chrome_extension.zip
         path: ./
+    - run: ls -al
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
