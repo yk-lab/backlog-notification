@@ -41,7 +41,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: chrome_extension.zip
-        path: ./
+        path: ./chrome_extension.zip
     - run: ls -al
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
